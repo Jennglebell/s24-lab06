@@ -30,10 +30,17 @@ public class Drawing {
      */
     public void draw(String format, String filename) {
         // TODO: Do you notice any issues here?
+        // Observation: shotgun surgery (bad responsibility assignment)
+        // Solution: strategy pattern: allows the behavior to be selected at runtime
+        // Define a WriterStrategy interface + different formats implements different classes
+        // void write(List<Shape> shapes, String filename) throws IOException;
         if (format.equals("jpeg")) {
             try (Writer writer = new JPEGWriter(filename + ".jpeg")) {
                 for (Shape shape : this.shapes) {
                     // TODO: What is the issue of the behavior here?
+                    // Observation: Feature Envy 
+                    // exposes the internal representation of shapes and how they are drawn
+                    // should encapsulate the drawing logic entirely within Shape: shape.draw(writer)
                     Line[] lines = shape.toLines();
                     shape.draw(writer, lines);
                 }
